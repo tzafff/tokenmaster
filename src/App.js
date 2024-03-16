@@ -24,6 +24,7 @@ function App() {
   const [toggle, setToggle] = useState(false);
 
   const loadBlockchainData = async () => {
+    
     const provider = new ethers.providers.Web3Provider(window.ethereum);
     setProvider(provider)
 
@@ -32,6 +33,7 @@ function App() {
     setTokenMaster(tokenMaster)
     
     const totalOccasions = await tokenMaster.totalOccasions()
+    console.log(totalOccasions.toString())
     const occasions = []
 
     for(var i = 1; i <= totalOccasions; i++) {
@@ -90,7 +92,7 @@ function App() {
           setToggle={setToggle}
         />
       )}
-      
+
     </div>
   );
 }
