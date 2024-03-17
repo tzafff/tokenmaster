@@ -7,8 +7,8 @@ const wallet_key = "";
 module.exports = {
   solidity: "0.8.17",
   networks: {
-    mumbai: {
-      url: "https://polygon-mumbai.g.alchemy.com/v2/",
+    sepolia: {
+      url: "https://eth-sepolia.g.alchemy.com/v2/",
       accounts: [wallet_key],
     },
   },
