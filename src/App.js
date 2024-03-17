@@ -25,6 +25,12 @@ function App() {
   const [owner, setOwner] = useState(null);
 
   const loadBlockchainData = async () => {
+
+    const storedAccount = localStorage.getItem("walletAccount");
+    if (storedAccount) {
+      setAccount(storedAccount);
+    }
+
     const provider = new ethers.providers.Web3Provider(window.ethereum);
     setProvider(provider);
 
@@ -52,8 +58,10 @@ function App() {
       const accounts = await window.ethereum.request({
         method: "eth_requestAccounts",
       });
-      const account = ethers.utils.getAddress(accounts[0]);
-      setAccount(account);
+      const newAccount = ethers.utils.getAddress(accounts[0]);
+      // Store the new account in localStorage
+      localStorage.setItem("walletAccount", newAccount);
+      setAccount(newAccount);
     });
   };
 

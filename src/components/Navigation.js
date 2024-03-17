@@ -5,9 +5,11 @@ const Navigation = ({ account, setAccount }) => {
     const accounts = await window.ethereum.request({
       method: "eth_requestAccounts",
     });
-    const account = ethers.utils.getAddress(accounts[0])
-    setAccount(account)
+    const account = ethers.utils.getAddress(accounts[0]);
+    setAccount(account);
+    localStorage.setItem("walletAccount", account);
   };
+  const storedAccount = localStorage.getItem("walletAccount");
 
   return (
     <nav>
@@ -36,23 +38,19 @@ const Navigation = ({ account, setAccount }) => {
         </ul>
       </div>
 
-      {account ? (
-        <button
-          type="button"
-          className="nav__connect"
-        >
-          {account.slice(0, 6) + '...' + account.slice(38, 42)}
+      {account || storedAccount ? (
+        // Display the connected wallet address
+        <button type="button" className="nav__connect">
+          {account
+            ? `${account.slice(0, 6)}...${account.slice(-4)}`
+            : `${storedAccount.slice(0, 6)}...${storedAccount.slice(-4)}`}
         </button>
       ) : (
-        <button
-          type="button"
-          className='nav__connect'
-          onClick={connectHandler}
-        >
+        // Display the connect button if no account is connected
+        <button type="button" className="nav__connect" onClick={connectHandler}>
           Connect
         </button>
       )}
-
     </nav>
   );
 };
