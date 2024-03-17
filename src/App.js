@@ -22,27 +22,30 @@ function App() {
 
   const [occasion, setOccasion] = useState({});
   const [toggle, setToggle] = useState(false);
+  const [owner, setOwner] = useState(null);
 
   const loadBlockchainData = async () => {
-    
     const provider = new ethers.providers.Web3Provider(window.ethereum);
-    setProvider(provider)
+    setProvider(provider);
 
-    const network = await provider.getNetwork()
-    const tokenMaster = new ethers.Contract(config[network.chainId].TokenMaster.address, TokenMaster, provider)
-    setTokenMaster(tokenMaster)
-    console.log(tokenMaster)
-    
-    const totalOccasions = await tokenMaster.totalOccasions()
-    console.log(totalOccasions.toString())
-    const occasions = []
+    const network = await provider.getNetwork();
+    const tokenMaster = new ethers.Contract(
+      config[network.chainId].TokenMaster.address,
+      TokenMaster,
+      provider
+    );
+    setTokenMaster(tokenMaster);
+    const owner = await tokenMaster.owner();
+    setOwner(owner)
+    const totalOccasions = await tokenMaster.totalOccasions();
+    console.log(totalOccasions.toString());
+    const occasions = [];
 
-    for(var i = 1; i <= totalOccasions; i++) {
-      const occasion = await tokenMaster.getOccasion(i)
-      occasions.push(occasion)
+    for (var i = 1; i <= totalOccasions; i++) {
+      const occasion = await tokenMaster.getOccasion(i);
+      occasions.push(occasion);
     }
-    console.log(occasions)
-    setOccasions(occasions)
+    setOccasions(occasions);
 
     // Refresh Account
     window.ethereum.on("accountsChanged", async () => {
@@ -67,9 +70,9 @@ function App() {
         </h2>
       </header>
 
-      <Sort />
+      <Sort tokenMaster={tokenMaster} provider={provider}  owner={owner} account={account}/>
 
-      <div className='cards'>
+      <div className="cards">
         {occasions.map((occasion, index) => (
           <Card
             occasion={occasion}
@@ -93,7 +96,6 @@ function App() {
           setToggle={setToggle}
         />
       )}
-
     </div>
   );
 }
